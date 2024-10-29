@@ -1,129 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculador de Medias de Notas</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
-
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 50px;
+            text-align: center;
+            margin: 20px;
         }
 
         h1 {
-            font-family: 'Roboto', sans-serif;
-            font-size: 36px;
+            font-size: 2.5em;
             color: #333;
-        }
-
-        input[type="text"] {
-            width: 500px;
-            padding: 12px;
-            margin-bottom: 10px;
-            font-size: 18px;
-            text-align: center;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 18px;
-            cursor: pointer;
-            background-color: #f0f0f0;
-            border: none;
-            border-radius: 5px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #e0e0e0;
-        }
-
-        .result {
-            font-size: 24px;
-            margin-top: 15px;
             font-weight: bold;
         }
 
-        .media-alta {
-            color: #00cc00;
-            font-size: 36px;
+        #inputContainer {
+            margin: 20px;
         }
 
-        .media-baja {
-            color: #cc0000;
-            font-size: 24px;
+        #inputNotas {
+            width: 80%;
+            height: 100px;
+            font-size: 1em;
+            padding: 10px;
+            margin-top: 10px;
         }
 
-        /* Texto de instrucciones */
-        .instrucciones {
-            font-size: 12px;
+        #result {
+            font-size: 1.5em;
             color: #333;
             margin-top: 20px;
         }
 
-        /* Estilo para el video */
-        .video-container {
-            margin-top: 20px;
+        #result span {
+            font-size: 2em;
+            font-weight: bold;
         }
 
-        video {
-            width: 100%;
-            max-width: 720px;
-            height: auto;
-            border: 2px solid #333;
-            border-radius: 8px;
+        #result .high {
+            color: #00cc00; /* Verde brillante */
+        }
+
+        #result .low {
+            color: #cc0000; /* Rojo */
+        }
+
+        button {
+            font-size: 1em;
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+            background-color: #fff;
+            border: 2px solid #000;
+        }
+
+        /* Estilo del botón de Tutorial */
+        #tutorialButton {
+            font-size: 1.5em;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            padding: 15px 30px;
+            cursor: pointer;
+            margin-top: 30px;
+        }
+
+        #tutorialButton:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
 
     <h1>Calculador de Medias de Notas</h1>
-    <input type="text" id="inputField" placeholder="Pega aquí tus notas">
-    <button onclick="calcularMedia()">Calcular Media</button>
-    <div id="resultado" class="result"></div>
 
-    <div class="instrucciones">Copia las notas del educamos y pégalas en el recuadro</div>
-
-    <!-- Contenedor del video -->
-    <div class="video-container">
-        <video controls>
-            <source src="Tutorial Calculadora de Medias.mp4" type="video/mp4">
-            Tu navegador no soporta el elemento de video.
-        </video>
+    <div id="inputContainer">
+        <textarea id="inputNotas" placeholder="Copia tus notas aquí..."></textarea><br>
+        <button onclick="calcularMedia()">Calcular Media</button>
     </div>
+
+    <div id="result"></div>
+
+    <!-- Botón de Tutorial -->
+    <button id="tutorialButton" onclick="window.open('https://drive.google.com/file/d/1n2FtHCbwPtLUmlZy2Vdw_ZFQjtzPjM-j/view?usp=sharing', '_blank')">Tutorial</button>
 
     <script>
         function calcularMedia() {
-            let input = document.getElementById("inputField").value;
-            
-            // Extrae solo números con decimales
-            let numeros = input.match(/\d+,\d{2}|\d+\.\d{2}/g);
-            
-            if (!numeros) {
-                document.getElementById("resultado").textContent = "No se encontraron notas válidas con decimales.";
+            const input = document.getElementById("inputNotas").value;
+            const regex = /\d{1,3},\d{2}/g;
+            const notas = input.match(regex)?.map(nota => parseFloat(nota.replace(",", "."))) || [];
+
+            if (notas.length === 0) {
+                document.getElementById("result").innerText = "No se encontraron notas válidas.";
                 return;
             }
 
-            // Convierte las comas en puntos para el cálculo
-            numeros = numeros.map(num => parseFloat(num.replace(",", ".")));
+            const suma = notas.reduce((a, b) => a + b, 0);
+            const media = suma / notas.length;
 
-            // Calcula la media
-            let suma = numeros.reduce((acc, val) => acc + val, 0);
-            let media = suma / numeros.length;
-
-            // Muestra el resultado
-            let resultadoDiv = document.getElementById("resultado");
-            if (media > 5) {
-                resultadoDiv.innerHTML = `Tu Media es de <span class="media-alta">${media.toFixed(2)}</span>`;
-            } else {
-                resultadoDiv.innerHTML = `Tu Media es de <span class="media-baja">${media.toFixed(2)}</span>`;
-            }
+            let resultText = "Tu Media es de ";
+            const mediaSpan = `<span class="${media >= 5 ? 'high' : 'low'}">${media.toFixed(2)}</span>`;
+            document.getElementById("result").innerHTML = resultText + mediaSpan;
         }
     </script>
 
