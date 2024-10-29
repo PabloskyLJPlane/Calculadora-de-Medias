@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculador de Medias de Notas</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        h1 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 36px;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 500px;
+            padding: 12px;
+            margin-bottom: 10px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .result {
+            font-size: 24px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .media-alta {
+            color: #00cc00;
+            font-size: 36px;
+        }
+
+        .media-baja {
+            color: #cc0000;
+            font-size: 24px;
+        }
+
+        /* Texto de instrucciones */
+        .instrucciones {
+            font-size: 12px;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        /* Estilo para el video */
+        .video-container {
+            margin-top: 20px;
+        }
+
+        video {
+            width: 100%;
+            max-width: 720px;
+            height: auto;
+            border: 2px solid #333;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Calculador de Medias de Notas</h1>
+    <input type="text" id="inputField" placeholder="Pega aquí tus notas">
+    <button onclick="calcularMedia()">Calcular Media</button>
+    <div id="resultado" class="result"></div>
+
+    <div class="instrucciones">Copia las notas del educamos y pégalas en el recuadro</div>
+
+    <!-- Contenedor del video -->
+    <div class="video-container">
+        <video controls>
+            <source src="Tutorial Calculadora de Medias.mp4" type="video/mp4">
+            Tu navegador no soporta el elemento de video.
+        </video>
+    </div>
+
+    <script>
+        function calcularMedia() {
+            let input = document.getElementById("inputField").value;
+            
+            // Extrae solo números con decimales
+            let numeros = input.match(/\d+,\d{2}|\d+\.\d{2}/g);
+            
+            if (!numeros) {
+                document.getElementById("resultado").textContent = "No se encontraron notas válidas con decimales.";
+                return;
+            }
+
+            // Convierte las comas en puntos para el cálculo
+            numeros = numeros.map(num => parseFloat(num.replace(",", ".")));
+
+            // Calcula la media
+            let suma = numeros.reduce((acc, val) => acc + val, 0);
+            let media = suma / numeros.length;
+
+            // Muestra el resultado
+            let resultadoDiv = document.getElementById("resultado");
+            if (media > 5) {
+                resultadoDiv.innerHTML = `Tu Media es de <span class="media-alta">${media.toFixed(2)}</span>`;
+            } else {
+                resultadoDiv.innerHTML = `Tu Media es de <span class="media-baja">${media.toFixed(2)}</span>`;
+            }
+        }
+    </script>
+
+</body>
+</html>
